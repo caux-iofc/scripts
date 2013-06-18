@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# TODO:
+# - Cauxpublic mounting alias
+# - Printers to add
+
+shopt -s nullglob
+
+die() {
+    printf '%s\n' "$@"
+    exit 1
+}
+
+read -rp "Login: " username
+realName="$username"
+password="$username" # As weird as this looks, we only need this for autologin, otherwise we wouldn't need one.
+
+(( EUID )) && die "This script must be run as root."
+
+curl -s -o /tmp/dockutil 'https://raw.github.com/caux-iofc/dockutil/master/scripts/dockutil' || die "Couldn't download dockutil."
+curl -s -o /tmp/kcpassword.pl 'https://raw.github.com/caux-iofc/kcpassword/master/kcpassword.pl' || die "Couldn't download kcpassword."
+curl -s -o /Library/Printers/PPDs/Contents/Resources/Oce_VarioPrint_2000_Postscript.ppd.gz 'http://fakkelbrigade.eu/chris/misc/Oce_VarioPrint_2000_Postscript.ppd.gz' || die "Couldn't download printer driver."
+chmod a+x /tmp/{dockutil,kcpassword.pl}
+
+id -u "$username" >/dev/null 2>&1 && die "User $username already exists on system."
+
+read -rp "Computer ID: " computerID
+username+=$computerID
+realName+=$computerID
+
+dscl . -create "/Users/$username" || die "Failed to create user."
+dscl . -create "/Users/$username" UserShell /bin/bash || die "Failed to set user shell."
+dscl . -create "/Users/$username" RealName "$realName" || die "Failed to set user real name."
+dscl . -create "/Users/$username" UniqueID "$(dscl . -list /Users UniqueID | awk 'BEGIN{i=0}{if($2>i)i=$2}END{print i+1}')" || die "Failed to set UID."
+dscl . -create "/Users/$username" PrimaryGroupID 20 || die "Failed to set primary GID as staff."
+dscl . -create "/Users/$username" NFSHomeDirectory "/Users/$username" || die "Failed to set NFS directory."
+dscl . -passwd "/Users/$username" "$password" || die "Failed to set password."
+cp -a "/System/Library/User Template/English.lproj" "/Users/$username"
+
+chown -R "$username:staff" "/Users/$username"
+
+for group in localaccounts everyone; do
+    dseditgroup -o edit -t user -a "$username" "$group" || die "Failed to add secondary group $group."
+done
+
+defaults write /Library/Preferences/.GlobalPreferences MultipleSessionEnabled -bool yes || die "Failed to enable fast user switching."
+
+for file in /etc/cups/ppd/*.ppd; do
+    printer="${file##*/}"
+    printer="${printer%.*}"
+    read -rp "Delete printer $printer? "
+    [[ $REPLY == [yY]* ]] && lpadmin -x "$printer"
+done
+
+read -s -n1 -p "Press any key to set autologin and log out."
+/tmp/kcpassword.pl "$username" "$password"
