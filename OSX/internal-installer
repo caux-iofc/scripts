@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # TODO:
-# - Cauxpublic mounting alias
-# - Printers to add
+# - Autopopulate dock. I tried using dockutil, but it had silent failures.
+# - Cauxpublic mounting alias. I've still not found a way to create this programatically so that it auto-mounts.
+# - Automatically install internet cafe printers on internet cafe machines.
 
 shopt -s nullglob
 
