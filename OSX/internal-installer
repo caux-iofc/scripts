@@ -36,9 +36,9 @@ dscl . -create "/Users/$username" UniqueID "$(dscl . -list /Users UniqueID | awk
 dscl . -create "/Users/$username" PrimaryGroupID 20 || die "Failed to set primary GID as staff."
 dscl . -create "/Users/$username" NFSHomeDirectory "/Users/$username" || die "Failed to set NFS directory."
 dscl . -passwd "/Users/$username" "$password" || die "Failed to set password."
-cp -a "/System/Library/User Template/English.lproj" "/Users/$username"
+cp -a "/System/Library/User Template/English.lproj" "/Users/$username" || die "Failed to copy lproj."
 
-chown -R "$username:staff" "/Users/$username"
+chown -R "$username:staff" "/Users/$username" || die "Failed to change homedir ownership."
 
 for group in localaccounts everyone; do
     dseditgroup -o edit -t user -a "$username" "$group" || die "Failed to add secondary group $group."
