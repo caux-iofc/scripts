@@ -1,27 +1,31 @@
 #!/bin/bash
 
 die() {
-    printf '%s\n' "${@:2}"
+    printf '%s\n' "${@:2}" >&2
     exit "$1"
+}
+
+warn() {
+    printf '%s\n' "$@" >&2
 }
 
 ppdPath=/Library/Printers/PPDs/Contents/Resources
 
 (( EUID )) && die 1 "This script must be run as root."
-
 [[ -d $ppdPath ]] || die 2 "Nonexistent PPD path: $ppdPath (is this really a Mac?)"
-curl -s -o "$ppdPath/Oce_VarioPrint_2000_Postscript.ppd.gz" \
-    "http://ge.tt/api/1/files/2RYq9kJ/0/blob?download" || die 3 "Couldn't download printer driver."
+
+printf '%s\n' "Downloading VarioPrint 2000 PPD"
+curl -s -o "$ppdPath/Oce_VarioPrint_2000_Postscript.ppd.gz" "http://ge.tt/api/1/files/2RYq9kJ/0/blob?download" || die 3 "Couldn't download printer driver."
 
 for printer in lower upper; do
+    printf 'Installing printer: %s\n' "$printer"
+
     if lpstat -a "$printer" >/dev/null 2>&1; then
-        printf '%s\n' "Printer already exists: $printer"
+        warn "Printer already exists: $printer"
         continue
     fi
-    ping -c1 "$printer.printer" >/dev/null 2>&1 || printf '%s\n' "No reply: $printer.printer"
 
     lpadmin -p "$printer" -E -v "lpd://$printer.printer/_${printer}_printer" \
             -P "$ppdPath/Oce_VarioPrint_2000_Postscript.ppd.gz" -D "$printer" \
-            -o printer-is-shared=false -u allow:all &&
-            printf '%s\n' "Added printer: $printer" || printf '%s\n' "Couldn't install printer: $printer"
+            -o printer-is-shared=false -u allow:all || printf '%s\n' "Couldn't install printer: $printer"
 done
