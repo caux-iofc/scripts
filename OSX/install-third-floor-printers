@@ -27,5 +27,5 @@ for printer in lower upper; do
 
     lpadmin -p "$printer" -E -v "lpd://$printer.printer/_${printer}_printer" \
             -P "$ppdPath/Oce_VarioPrint_2000_Postscript.ppd.gz" -D "$printer" \
-            -o printer-is-shared=false -u allow:all || printf '%s\n' "Couldn't install printer: $printer"
+            -o printer-is-shared=false -u allow:all || warn "Couldn't install printer: $printer"
 done
