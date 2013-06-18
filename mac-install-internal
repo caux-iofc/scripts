@@ -18,10 +18,8 @@ password="$username" # As weird as this looks, we only need this for autologin, 
 
 (( EUID )) && die "This script must be run as root."
 
-curl -s -o /tmp/dockutil 'https://raw.github.com/caux-iofc/dockutil/master/scripts/dockutil' || die "Couldn't download dockutil."
 curl -s -o /tmp/kcpassword.pl 'https://raw.github.com/caux-iofc/kcpassword/master/kcpassword.pl' || die "Couldn't download kcpassword."
-curl -s -o /Library/Printers/PPDs/Contents/Resources/Oce_VarioPrint_2000_Postscript.ppd.gz 'http://fakkelbrigade.eu/chris/misc/Oce_VarioPrint_2000_Postscript.ppd.gz' || die "Couldn't download printer driver."
-chmod a+x /tmp/{dockutil,kcpassword.pl}
+chmod a+x /tmp/kcpassword.pl
 
 id -u "$username" >/dev/null 2>&1 && die "User $username already exists on system."
 
