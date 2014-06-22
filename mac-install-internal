@@ -18,7 +18,7 @@ password="$username" # As weird as this looks, we only need this for autologin, 
 
 (( EUID )) && die "This script must be run as root."
 
-curl -s -o /tmp/kcpassword.pl 'https://raw.github.com/caux-iofc/kcpassword/master/kcpassword.pl' || die "Couldn't download kcpassword."
+curl -s -o /tmp/kcpassword.pl 'https://raw.githubusercontent.com/caux-iofc/kcpassword/master/kcpassword.pl' || die "Couldn't download kcpassword."
 chmod a+x /tmp/kcpassword.pl
 
 id -u "$username" >/dev/null 2>&1 && die "User $username already exists on system."
