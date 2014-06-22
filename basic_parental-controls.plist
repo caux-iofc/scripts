@@ -176,6 +176,7 @@
 			<key>value</key>
 			<array>
 				<string>https://tools.google.com</string>
+				<string>https://fmhelp.filemaker.com</string>
 			</array>
 		</dict>
 		<key>restrictWeb</key>
@@ -276,6 +277,12 @@
 					<string>https://tools.google.com</string>
 					<key>pageTitle</key>
 					<string>https://tools.google.com</string>
+				</dict>
+				<dict>
+					<key>address</key>
+					<string>https://fmhelp.filemaker.com</string>
+					<key>pageTitle</key>
+					<string>https://fmhelp.filemaker.com</string>
 				</dict>
 			</array>
 		</dict>
