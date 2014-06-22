@@ -2,7 +2,11 @@
 
 read -rp "Login: " username
 
-curl -s -o /tmp/basic_parental-controls.plist 'https://raw.githubusercontent.com/caux-iofc/basic_parental-controls.plist' || die "Couldn't download basic_parental-controls.plist"
+# the basic_parental-controls.plist file can be generated with
+# sudo dscl . -mcxexport /Users/$username >basic_parental-controls.plist
+# on an account with parental controls enabled.
+
+curl -s -o /tmp/basic_parental-controls.plist 'https://raw.githubusercontent.com/caux-iofc/scripts/master/basic_parental-controls.plist' || die "Couldn't download basic_parental-controls.plist"
 
 echo "Installing parental controls for user $username"
 sudo dscl . -mcximport /Users/$username /tmp/basic_parental-controls.plist
