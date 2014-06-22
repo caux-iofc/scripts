@@ -1,0 +1,8 @@
+#!/bin/bash
+
+read -rp "Login: " username
+
+curl -s -o /tmp/basic_parental-controls.plist 'https://raw.githubusercontent.com/caux-iofc/basic_parental-controls.plist' || die "Couldn't download basic_parental-controls.plist"
+
+echo "Installing parental controls for user $username"
+sudo dscl . -mcximport /Users/$username /tmp/basic_parental-controls.plist
