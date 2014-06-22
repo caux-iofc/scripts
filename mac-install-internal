@@ -81,6 +81,16 @@ sudo defaults write /Users/$username/Library/Preferences/com.apple.systemuiserve
 
 sudo killall SystemUIServer
 
+# Finally, ask the user if they want to switch to IOFC-secure
+
+read -rp "If ou want to switch to IOFC-secure wifi, enter the password here, otherwise press enter: "
+if [[ $REPLY != '' ]]; then
+  echo "Switching to IOFC-secure"
+  sudo networksetup -setairportpower en1 on
+  sudo networksetup -removepreferredwirelessnetwork en1 IOFC
+  sudo networksetup -addpreferredwirelessnetworkatindex en1 IOFC-secure 0 WPA2 $REPLY
+fi
+
 # Log out
 read -s -n1 -p "Press any key to log out."
 killall loginwindow
