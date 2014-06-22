@@ -174,7 +174,9 @@
 			<key>state</key>
 			<string>always</string>
 			<key>value</key>
-			<array/>
+			<array>
+				<string>https://tools.google.com</string>
+			</array>
 		</dict>
 		<key>restrictWeb</key>
 		<dict>
@@ -268,6 +270,12 @@
 					<string>/</string>
 					<key>pageTitle</key>
 					<string>Time for Kids</string>
+				</dict>
+				<dict>
+					<key>address</key>
+					<string>https://tools.google.com</string>
+					<key>pageTitle</key>
+					<string>https://tools.google.com</string>
 				</dict>
 			</array>
 		</dict>
