@@ -66,6 +66,21 @@ if [[ $REPLY == [yY]* ]]; then
   bash /tmp/mac-parental-controls $username
 fi
 
-read -s -n1 -p "Press any key to log out."
+# Add keyboard switcher to the top right menu
+# defaults read /Users/$username/Library/Preferences/com.apple.systemuiserver menuExtras
+# (
+#    "/System/Library/CoreServices/Menu Extras/TimeMachine.menu",
+#    "/System/Library/CoreServices/Menu Extras/Bluetooth.menu",
+#    "/System/Library/CoreServices/Menu Extras/AirPort.menu",
+#    "/System/Library/CoreServices/Menu Extras/Volume.menu",
+#    "/System/Library/CoreServices/Menu Extras/TextInput.menu",
+#    "/System/Library/CoreServices/Menu Extras/Clock.menu",
+#    "/System/Library/CoreServices/Menu Extras/User.menu"
+# )
+sudo defaults write /Users/$username/Library/Preferences/com.apple.systemuiserver menuExtras -array "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" "/System/Library/CoreServices/Menu Extras/AirPort.menu" "/System/Library/CoreServices/Menu Extras/Volume.menu" "/System/Library/CoreServices/Menu Extras/TextInput.menu" "/System/Library/CoreServices/Menu Extras/Clock.menu" "/System/Library/CoreServices/Menu Extras/User.menu"
+
+sudo killall SystemUIServer
+
 # Log out
+read -s -n1 -p "Press any key to log out."
 killall loginwindow
