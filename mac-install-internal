@@ -44,6 +44,12 @@ done
 
 defaults write /Library/Preferences/.GlobalPreferences MultipleSessionEnabled -bool yes || die "Failed to enable fast user switching."
 
+defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser $username
+
+# stop reopening windows after a reboot
+defaults write com.apple.loginwindow TALLogoutSavesState -bool false
+defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
+
 for file in /etc/cups/ppd/*.ppd; do
     printer="${file##*/}"
     printer="${printer%.*}"
@@ -51,5 +57,15 @@ for file in /etc/cups/ppd/*.ppd; do
     [[ $REPLY == [yY]* ]] && lpadmin -x "$printer"
 done
 
-read -s -n1 -p "Press any key to set autologin and log out."
 /tmp/kcpassword.pl "$username" "$password"
+
+read -rp "Enable parental controls? "
+if [[ $REPLY == [yY]* ]]; then
+  curl -s -o /tmp/mac-parental-controls 'https://raw.githubusercontent.com/caux-iofc/scripts/master/mac-parental-controls' || die "Couldn't download mac-parental-controls"
+  chmod a+x /tmp/mac-parental-controls
+  bash /tmp/mac-parental-controls $username
+fi
+
+read -s -n1 -p "Press any key to log out."
+# Log out
+killall loginwindow

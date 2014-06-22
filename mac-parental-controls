@@ -1,6 +1,10 @@
 #!/bin/bash
 
-read -rp "Login: " username
+if [[ "$1" == "" ]]; then
+  read -rp "Login: " username
+else
+  username=$1
+fi
 
 # the basic_parental-controls.plist file can be generated with
 # sudo dscl . -mcxexport /Users/$username >basic_parental-controls.plist
