@@ -12,7 +12,8 @@ die() {
     exit 1
 }
 
-read -rp "Login: " username
+username="iofc"
+#read -rp "Login: " username
 realName="$username"
 password="$username" # As weird as this looks, we only need this for autologin, otherwise we wouldn't need one.
 
@@ -91,7 +92,7 @@ if [[ $REPLY != '' ]]; then
   sudo networksetup -addpreferredwirelessnetworkatindex en1 IOFC-secure 0 WPA2 $REPLY
   echo "Please add the MAC address of this computer to the radius server. Here is the relevant information:"
   echo
-  echo "Name: $username\n"
+  echo "Name: $username"
   echo "MAC: " `ifconfig en1 |grep ether|sed -e 's/^.*ether//'`
   echo "Device: Mac $username"
   echo
