@@ -83,12 +83,18 @@ sudo killall SystemUIServer
 
 # Finally, ask the user if they want to switch to IOFC-secure
 
-read -rp "If ou want to switch to IOFC-secure wifi, enter the password here, otherwise press enter: "
+read -rp "If you want to set this computer up with IOFC-secure wifi for cauxpublic access, enter the password here, otherwise press enter: "
 if [[ $REPLY != '' ]]; then
   echo "Switching to IOFC-secure"
   sudo networksetup -setairportpower en1 on
   sudo networksetup -removepreferredwirelessnetwork en1 IOFC
   sudo networksetup -addpreferredwirelessnetworkatindex en1 IOFC-secure 0 WPA2 $REPLY
+  echo "Please add the MAC address of this computer to the radius server. Here is the relevant information:"
+  echo
+  echo "Name: $username\n"
+  echo "MAC: " `ifconfig en1 |grep ether|sed -e 's/^.*ether//'`
+  echo "Device: Mac $username"
+  echo
 fi
 
 # Log out
