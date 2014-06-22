@@ -67,7 +67,29 @@ if [[ $REPLY == [yY]* ]]; then
   bash /tmp/mac-parental-controls $username
 fi
 
-# Add keyboard switcher to the top right menu
+# ==============================================
+# Set keyboard preferences
+# ==============================================
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceID "com.apple.keylayout.SwissFrench"
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleDefaultAsciiInputSource -dict InputSourceKind "Keyboard Layout" "KeyboardLayout ID" -int 18 "KeyboardLayout Name" "Swiss French"
+
+# Enable US layout
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 0; "KeyboardLayout Name" = "U.S."; }'
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleInputSourceHistory -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 0; "KeyboardLayout Name" = "U.S."; }'
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleSelectedInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 0; "KeyboardLayout Name" = "U.S."; }'
+
+# Enable British layout
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleEnabledInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 2; "KeyboardLayout Name" = "British"; }'
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleInputSourceHistory -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 2; "KeyboardLayout Name" = "British"; }'
+sudo defaults write /Library/Preferences/com.apple.HIToolbox AppleSelectedInputSources -array '{ InputSourceKind = "Keyboard Layout"; "KeyboardLayout ID" = 2; "KeyboardLayout Name" = "British"; }'
+
+# Enable key repeat
+sudo defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool FALSE
+
+# Set keyboard repeat rate
+sudo defaults write NSGlobalDomain KeyRepeat -int 2
+
+# Add keyboard switcher to the top right menu, install a few extra keyboard layouts
 # defaults read /Users/$username/Library/Preferences/com.apple.systemuiserver menuExtras
 # (
 #    "/System/Library/CoreServices/Menu Extras/TimeMachine.menu",
@@ -80,7 +102,11 @@ fi
 # )
 sudo defaults write /Users/$username/Library/Preferences/com.apple.systemuiserver menuExtras -array "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" "/System/Library/CoreServices/Menu Extras/AirPort.menu" "/System/Library/CoreServices/Menu Extras/Volume.menu" "/System/Library/CoreServices/Menu Extras/TextInput.menu" "/System/Library/CoreServices/Menu Extras/Clock.menu" "/System/Library/CoreServices/Menu Extras/User.menu"
 
+# Refresh dashboard
 sudo killall SystemUIServer
+
+# Check results with this command
+#sudo defaults read /Users/$username/Library/Preferences/com.apple.systemuiserver menuExtras
 
 # Finally, ask the user if they want to switch to IOFC-secure
 
